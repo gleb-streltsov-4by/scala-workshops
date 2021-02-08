@@ -42,12 +42,6 @@ object Intro {
     def execute(callback: (Int, Int) => Int, a: Int, b: Int): Int = callback(a, b)
   }
 
-  def main(args: Array[String]): Unit = {
-    println("Add: " + execute(add, 3, 4))
-    println(s"Subtract: ${execute(subtract, 3, 4)}")
-    printf("Multiply: %3d\n", execute(multiply, 3, 4))
-  }
-
   /**
    * What about other GOF patterns or OO principles?
    * --------------------------------------------------------------------
