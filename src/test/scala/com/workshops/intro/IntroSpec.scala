@@ -26,8 +26,8 @@ class IntroSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks {
   }
 
   "sum" should "return correct results" in {
-    sum(plain, List(1,4,7)) shouldEqual 12
-    sum(cube, List(1,4,7)) shouldEqual 408
-    sum(fact, List(1,4,7)) shouldEqual 5065
+    sumWithDataStructures(plain, 1, 5) shouldEqual 15
+    sumWithDataStructures(cube, 1, 5) shouldEqual 225
+    sumWithDataStructures(fact, 1, 5) shouldEqual 153
   }
 }
