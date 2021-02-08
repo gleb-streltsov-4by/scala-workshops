@@ -193,7 +193,7 @@ object Intro {
       person <- team // generator
       name = person.name // definition
       if name.length > 3 // filter
-    } yield person
+    } yield person // for + yield creates a list of persons
   )
 
   /** How to write a class that can be used in a for expression?
@@ -206,11 +206,6 @@ object Intro {
     2. If a data type defines only map, it can be used in `for expressions` consisting of a single `generator`.
     3. If it defines `flatMap` a well as `map`, it allows `for expressions` consist of multiple `generators`.
     4. If it defines `withFilter`,it allows for `filter expressions` starting with an `if` within the `for expression`.
-
-  Note:
-  If `withFilter` doesn't exist on the class being used in the for comprehension,
-  the compiler will fall back and use the class’s `filter` method instead.
-  `filter` creates a new collection, `withFilter` lazily pass unfiltered values through to later map/flatMap/withFilter calls.
    */
 
   abstract class CustomClass[A] {
