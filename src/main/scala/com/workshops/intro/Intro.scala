@@ -1,7 +1,5 @@
 package com.workshops.intro
 
-import com.workshops.intro.Intro.DeathToStrategyPattern.{add, execute, multiply, subtract}
-
 import scala.annotation.tailrec
 
 /** Object is a singleton */
