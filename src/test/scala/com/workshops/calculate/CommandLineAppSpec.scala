@@ -101,7 +101,7 @@ class CommandLineAppSpec extends AnyFlatSpec with ScalaCheckDrivenPropertyChecks
 
   "calculate" should "return error if one of the args isn't specified" in {
     val command = Max(List(Some(4), None, Some(-3), Some(-17)))
-    val error = ErrorMessage("parse arguments ...")
+    val error = ErrorMessage("invalid arguments ...")
 
     calculate(command).left.getOrElse() shouldEqual error
   }

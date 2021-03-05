@@ -1,6 +1,7 @@
 package com.workshops.calculate
 
 import scala.io.Source
+import CommandLineApp.Command._
 
 object CommandLineApp {
 
@@ -20,6 +21,11 @@ object CommandLineApp {
    - serializable and mimic algebraic data types (ADT)
      */
     final case class Sum(numbers: List[Option[Double]]) extends Command
+    final case class Average(numbers: List[Option[Double]]) extends Command
+    final case class Min(numbers: List[Option[Double]]) extends Command
+    final case class Max(numbers: List[Option[Double]]) extends Command
+    final case class Divide(a: Option[Double], b: Option[Double]) extends Command
+    final case class Dummy(numbers: List[Option[Double]]) extends Command
 
     // add `avg`, `divide`, `min`, `max`
   }
@@ -30,23 +36,64 @@ object CommandLineApp {
 
   final case class Result(command: Command, numbers: List[Double], result: Double)
 
-  def parseCommand(input: String): Either[ErrorMessage, Command] = {
-    ??? // implement this method
-    // Implementation hints:
-    // You can use String#split, convert to List using .toList, then pattern match on:
-    //   case x :: xs => ???
+  implicit def toDouble(s: String): Option[Double] = s.toDoubleOption
+  implicit def toDoubleList(ss: List[String]): List[Option[Double]] = ss.map(_.toDoubleOption)
 
-    // Consider how to handle extra whitespace gracefully (without errors).
+  def parseCommand(input: String): Either[ErrorMessage, Command] = {
+
+    input.split("\\s+").toList match {
+      case "sum"      :: numbers     => Right(Sum(numbers))
+      case "max"      :: numbers     => Right(Max(numbers))
+      case "min"      :: numbers     => Right(Min(numbers))
+      case "average"  :: numbers     => Right(Average(numbers))
+
+      case "divide"   :: dividend :: divisor :: Nil => Right(Divide(dividend, divisor))
+
+      case _ => Left(ErrorMessage("parse command ..."))
+    }
+  }
+
+  def handle(command: Command, ns: List[Option[Double]])(
+    f: List[Double] => Double): Either[ErrorMessage, Result] = {
+
+    if (ns.forall(_.isDefined)) {
+      val flatten = ns.flatten
+      Right(Result(command, flatten, f(flatten)))
+    }
+    else Left(ErrorMessage("invalid arguments ..."))
   }
 
   // should return an error (using `Left` channel) in case of division by zero and other
   // invalid operations
-  def calculate(x: Command): Either[ErrorMessage, Result] = {
-    ??? // implement this method
+  def calculate(command: Command): Either[ErrorMessage, Result] = {
+    command match {
+      case Divide(_, Some(0))         => Left(ErrorMessage("division by zero ..."))
+      case Divide(Some(a), Some(b))   => Right(Result(command, List(a, b), a / b))
+
+      case Sum(nums)                  => handle(command, nums)(nums => nums.sum)
+      case Average(nums)              => handle(command, nums)(nums => nums.sum / nums.length)
+      case Min(nums)                  => handle(command, nums)(nums => nums.min)
+      case Max(nums)                  => handle(command, nums)(nums => nums.max)
+    }
   }
 
-  def renderResult(x: Result): String = {
-    ??? // implement this method
+  // the sum of numbers is result
+  def renderResult(r: Result): String = {
+
+    def obtain(d: Double): String =
+      if (d.toLong == d) d.toLong.toString
+      else d.toString
+
+    def obtainList(lst: List[Double]): String =
+      lst.map(obtain).mkString(" ")
+
+    r.command match {
+      case Divide(Some(a), Some(b)) => s"${obtain(a)} divided by ${obtain(b)} is ${obtain(r.result)}"
+      case Sum(_)                   => s"the sum of ${obtainList(r.numbers)} is ${obtain(r.result)}"
+      case Min(_)                   => s"the minimum of ${obtainList(r.numbers)} is ${obtain(r.result)}"
+      case Max(_)                   => s"the maximum of ${obtainList(r.numbers)} is ${obtain(r.result)}"
+      case Average(_)               => s"the average of ${obtainList(r.numbers)} is ${obtain(r.result)}"
+    }
   }
 
   /** Pure function should:
@@ -70,8 +117,17 @@ object CommandLineApp {
   */
 
   def process(x: String): String = {
-    // use `parseCommand`, `calculate`, `renderResult` functions
-    ???
+    // use `parseCommand`, `calculate`, `renderResult` function
+
+    val result: Either[ErrorMessage, Result] = for {
+      command     <- parseCommand(x)
+      calculation <- calculate(command)
+    } yield calculation
+
+    result match {
+      case Left(error)  => error.message
+      case Right(r)     => renderResult(r)
+    }
   }
 
   /**
