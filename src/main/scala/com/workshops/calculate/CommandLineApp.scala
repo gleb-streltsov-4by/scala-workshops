@@ -75,10 +75,8 @@ object CommandLineApp {
 
   // This `main` method reads lines from stdin, passes each to `process` and outputs the return value to stdout
   def main(args: Array[String]): Unit = {
-    for {
-      str <- Source.stdin.getLines().map(line =>
-        process(line)
-      )
-    } println(str)
+    Source.stdin.getLines()
+      .map(line => process(line))
+      .foreach(result => println(result))
   }
 }
