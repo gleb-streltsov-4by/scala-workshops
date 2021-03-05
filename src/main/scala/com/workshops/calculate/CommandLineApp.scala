@@ -4,7 +4,7 @@ import scala.io.Source
 
 object CommandLineApp {
 
-  // enum alternative
+  /** enum alternative */
   sealed trait Command
   object Command {
 
@@ -59,13 +59,14 @@ object CommandLineApp {
 
    A function without side effects only returns a value
 
-   Benefits of pure functions
+   Benefits of pure functions:
 
-   Fearless refactoring: any value can be replaced by the function that produced it (referential transparency)
-   Documentations based on functions types
-   Easier to test: no mutation, no randomness, no side effects
-   Potential compiler optimisations
-   Make parallel processing easier
+   1) Fearless refactoring: any value can be replaced by the function that produced it (referential transparency)
+   2) Documentations based on functions types
+   3) Easier to test: no mutation, no randomness, no side effects
+   4) Potential compiler optimisations
+   5) Make parallel processing easier
+
   */
 
   def process(x: String): String = {
@@ -73,7 +74,10 @@ object CommandLineApp {
     ???
   }
 
-  // This `main` method reads lines from stdin, passes each to `process` and outputs the return value to stdout
+  /**
+   This `main` method reads lines from stdin, passes each to `process`
+   and outputs the return value to stdout
+  */
   def main(args: Array[String]): Unit = {
     Source.stdin.getLines()
       .map(line => process(line))
