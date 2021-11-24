@@ -210,9 +210,16 @@ object CatsGentleIntro {
     List("1", "two", "3").traverse(anotherParseInt)
     // res: Option[List[Int]] = None
 
-    /** Given a function which returns a G effect, thread this effect
+    /** Traverse:
+      *
+      * Given a function which returns a G effect, thread this effect
       * through the running of this function on all the values in F,
       * returning an F[B] in a G context.
+      *
+      * Example Let's say we are working with Future
+      *
+      * Then Future.traverse solve a very specific problem:
+      * it allow us to iterate over a sequence of Futures and accumulate a result.
       */
 
   }
