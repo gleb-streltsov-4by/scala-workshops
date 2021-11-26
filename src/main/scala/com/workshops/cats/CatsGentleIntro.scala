@@ -55,13 +55,13 @@ object CatsGentleIntro {
       */
   }
 
-  /** Cats Core & Effect provide a tone of useful type classes, which are building block
+  /** Cats Core & Effect provide a tone of useful type classes, which are building blocks
     * for writing apps in Scala following principles of FP
     */
   object CatsTypeClasses {
 
     /** Great book for Cats Core:
-      * https://www.scalawithcats.com/dist/scala-with-cats.pdf
+      * https://www.scalawithcats.com/dist/scala-with-cats.pdf (!!!!)
       */
 
     /** The following Cats Type Classes will be shown below:
@@ -84,6 +84,16 @@ object CatsGentleIntro {
 
     val optInt:     Option[Int] = Option(1) // the same as Option.apply(1)
     val optNoneInt: Option[Int] = None
+
+    import cats.syntax.applicative._
+
+    "str".pure[Option] // `data.pure[F]` in Tagless Final
+
+    /** Useful link for Tagless Final
+      *
+      * https://www.youtube.com/watch?v=XJ2NjqkWdck&list=PLJGDHERh23x-3_T3Dua6Fwp4KlG0J25DI
+      * https://github.com/itechart-scala-lab/scala-internship/blob/master/src/main/scala/com/itechart/internship/tf/TaglessFinal.scala
+      */
 
     val eitherInt:      Either[String, Int] = Right(1)
     val eitherErrorInt: Either[String, Int] = Left("Error!")
@@ -170,11 +180,11 @@ object CatsGentleIntro {
     // MonadError
 
     /** MonadError is a Monad that allows you to raise and/or handle an error value.
-      * This type class allows one to abstract over error-handling monads.
+      * This type class allows to abstract over error-handling monads.
       */
 
     import cats.MonadError
-    import cats.instances.either._ // implicit MonadError
+    import cats.instances.either._ // Either implicits for MonadError
 
     type ErrorOr[A] = Either[String, A]
 
